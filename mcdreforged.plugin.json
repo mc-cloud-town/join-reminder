@@ -1,0 +1,15 @@
+{
+  "id": "reminder",
+  "version": "1.0.0",
+  "name": "join-reminder",
+  "description": {
+    "en_us": "join progress reminder",
+    "zh_cn": "加入進度提醒"
+  },
+  "author": "猴貓<a102009102009@gmail.com>",
+  "link": "https://github.com/mc-cloud-town/TimeBackup",
+  "dependencies": {
+    "mcdreforged": ">=2.0.0-"
+  },
+  "resources": ["LICENSE"]
+}
