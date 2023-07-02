@@ -81,10 +81,6 @@ def parse_interval(str_interval: str) -> int:
     return int(datetime.now() + timedelta(seconds=result))
 
 
-def on_load(server: PluginServerInterface, ord):
-    server.register_help_message(PREFIX, "設定提醒")
-
-
 def list_info() -> RTextList:
     lists: list[RTextList] = []
     for name, time in list_dic.items():
