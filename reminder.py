@@ -35,6 +35,7 @@ def read():
         list_dic = json.load(config_path.read_text(encoding="utf-8"))
     except Exception:
         save()
+    return list_dic
 
 
 def save():
@@ -82,11 +83,12 @@ def parse_interval(str_interval: str) -> int:
 
 def list_info() -> RTextList:
     lists: list[RTextList] = []
-    for name, time in list_dic.items():
+    for name, time in read().items():
         if time == -1:
             time_str = "永久"
         elif (time_ := datetime.fromtimestamp(time)) < datetime.now():
             del list_dic[name]
+            save()
             continue
         else:
             time_str = time_.strftime("%Y-%m-%d %H:%M:%S")
@@ -100,8 +102,8 @@ def list_info() -> RTextList:
                     f"{PREFIX} del {name}",
                 )
                 .h(RText("刪除", color=RColor.red)),
-                RText(f" {name}", color=RColor.aqua)
-                .c(f"{PREFIX} add {name} {time}")
+                RText(f" {parse_format(name)}", color=RColor.aqua)
+                .c(RAction.suggest_command, f"{PREFIX} add {name} {time}")
                 .h(
                     "點擊以修改訊息\n",
                     RText("截止時間: ", color=RColor.gray),
@@ -134,21 +136,23 @@ def on_info(server: PluginServerInterface, info: Info):
                 server.tell(info.player, HELP_MESSAGE)
                 return
             # {PREFIX} <name>
-            list_dic[parse_format(arg1)] = -1
+            list_dic[arg1] = -1
         elif len_args == 3:
             # {PREFIX} del <name>
             if arg1 == "del" or arg1 == "d":
                 if (arg := args[2]) in list_dic:
                     del list_dic[arg]
-                    server.tell(info.player, f"§b{arg}§r 已刪除")
+                    server.tell(info.player, f"§b{parse_format(arg)}§r 已刪除")
                 else:
-                    server.tell(info.player, f"§b{arg}§r 不存在")
+                    server.tell(info.player, f"§b{parse_format(arg)}§r 不存在")
             # {PREFIX} <name> <duration>
             else:
-                list_dic[parse_format(arg1)] = parse_interval(args[2])
+                list_dic[arg1] = parse_interval(args[2])
         else:
             server.tell(info.player, HELP_MESSAGE)
             return
+        server.tell(info.player, "添加/更新完成")
+        server.tell(info.player, list_info())
         save()
 
 
