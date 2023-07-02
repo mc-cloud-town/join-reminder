@@ -137,7 +137,7 @@ def on_info(server: PluginServerInterface, info: Info):
                 server.tell(info.player, HELP_MESSAGE)
                 return
             # {PREFIX} <name>
-            list_dic[arg1] = -1
+            list_dic[parse_format(arg1)] = -1
         elif len_args == 3:
             # {PREFIX} del <name>
             if arg1 == "del" or arg1 == "d":
@@ -148,7 +148,7 @@ def on_info(server: PluginServerInterface, info: Info):
                     server.tell(info.player, f"§b{arg}§r 不存在")
             # {PREFIX} <name> <duration>
             else:
-                list_dic[arg1] = parse_interval(args[2])
+                list_dic[parse_format(arg1)] = parse_interval(args[2])
         else:
             server.tell(info.player, HELP_MESSAGE)
             return
