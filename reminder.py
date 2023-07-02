@@ -124,7 +124,7 @@ def on_info(server: PluginServerInterface, info: Info):
         args = info.content.split(" ")
         # {PREFIX}
         if (len_args := len(args)) == 1:
-            server.tell(info, list_info())
+            server.tell(info.player, list_info())
             return
 
         arg1 = args[1]
