@@ -81,7 +81,7 @@ def parse_interval(str_interval: str) -> float:
     return (datetime.now() + timedelta(seconds=result)).timestamp()
 
 
-def list_info() -> list[RTextList]:
+def list_info(null: bool = False) -> list[RTextList]:
     lists: list[RTextList] = []
     for name, time in read().copy().items():
         if time == -1:
@@ -111,7 +111,9 @@ def list_info() -> list[RTextList]:
                 ),
             )
         )
-    return lists
+    if not lists and null:
+        lists.append(RTextList("無"))
+    return RTextList(*lists)
 
 
 def on_info(server: PluginServerInterface, info: Info):
@@ -124,9 +126,7 @@ def on_info(server: PluginServerInterface, info: Info):
         args = info.content.split(" ")
         # {PREFIX}
         if (len_args := len(args)) == 1:
-            if not (lists := list_info()):
-                lists.append(RTextList("無"))
-            server.tell(info.player, RTextList(*lists))
+            server.tell(info.player, list_info(null=True))
             return
 
         arg1 = args[1]
@@ -152,7 +152,7 @@ def on_info(server: PluginServerInterface, info: Info):
             server.tell(info.player, HELP_MESSAGE)
             return
         server.tell(info.player, "添加/更新完成")
-        server.tell(info.player, list_info())
+        server.tell(info.player, list_info(null=True))
         save()
 
 
