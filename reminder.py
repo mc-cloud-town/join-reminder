@@ -60,7 +60,7 @@ def parse_format(text: str) -> str:
     ).replace("$$", "$")
 
 
-def parse_interval(str_interval: str) -> int:
+def parse_interval(str_interval: str) -> float:
     if str_interval.startswith("-"):
         return -1
     digit, result = "", 0
@@ -78,12 +78,12 @@ def parse_interval(str_interval: str) -> int:
     if digit:
         result, _ = add()
 
-    return int(datetime.now() + timedelta(seconds=result))
+    return (datetime.now() + timedelta(seconds=result)).timestamp()
 
 
-def list_info() -> RTextList:
+def list_info() -> list[RTextList]:
     lists: list[RTextList] = []
-    for name, time in read().items():
+    for name, time in read().copy().items():
         if time == -1:
             time_str = "永久"
         elif (time_ := datetime.fromtimestamp(time)) < datetime.now():
@@ -111,9 +111,7 @@ def list_info() -> RTextList:
                 ),
             )
         )
-    if not lists:
-        lists.append(RTextList("無"))
-    return RTextList(*lists)
+    return lists
 
 
 def on_info(server: PluginServerInterface, info: Info):
@@ -126,7 +124,9 @@ def on_info(server: PluginServerInterface, info: Info):
         args = info.content.split(" ")
         # {PREFIX}
         if (len_args := len(args)) == 1:
-            server.tell(info.player, list_info())
+            if not (lists := list_info()):
+                lists.append(RTextList("無"))
+            server.tell(info.player, RTextList(*lists))
             return
 
         arg1 = args[1]
