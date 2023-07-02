@@ -21,7 +21,7 @@ HELP_MESSAGE = (
     "================== §bjoin reminder§r ==================\n"
     f"§b{PREFIX} §r 顯示所有提醒\n"
     f"§b{PREFIX} help §r 顯示幫助\n"
-    f"§b{PREFIX} del <name> §r 添加提醒\n"
+    f"§b{PREFIX} del <name> §r 刪除提醒\n"
     f"§b{PREFIX} <name> [duration] §r 添加 <name> 提醒 <duration> 為提醒截止間隔 (1d2h3m4s)\n"
 )
 
